@@ -1,8 +1,9 @@
-
 import React, { useState, useRef } from 'react';
 
 interface Props {
   name: string;
+  poem?: string;
+  isLoadingPoem?: boolean;
   isBlurred: boolean;
   isAccepted: boolean;
   onRead: () => void;
@@ -10,19 +11,16 @@ interface Props {
   onRestart: () => void;
 }
 
-const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAccept, onRestart }) => {
+const LetterView: React.FC<Props> = ({ name, poem, isLoadingPoem, isBlurred, isAccepted, onRead, onAccept, onRestart }) => {
   const [noPos, setNoPos] = useState({ x: 0, y: 0 });
   const [isQuestionVisible, setIsQuestionVisible] = useState(false);
   const letterRef = useRef<HTMLDivElement>(null);
 
   const handleNoHover = () => {
     if (isAccepted || !letterRef.current || !isQuestionVisible) return;
-    
-    // Calculate a random position relative to the current position
     const range = 250;
     const newX = (Math.random() - 0.5) * range;
     const newY = (Math.random() - 0.5) * range;
-    
     setNoPos({ x: newX, y: newY });
   };
 
@@ -35,7 +33,6 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
 
   return (
     <div className={`flex flex-col items-center justify-center w-full transition-all duration-[1000ms] ease-in-out ${isBlurred ? 'scale-75 translate-y-20' : 'scale-100 translate-y-0'}`}>
-      
       <div 
         ref={letterRef}
         onClick={isBlurred ? onRead : undefined}
@@ -46,21 +43,8 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
           ${isAccepted ? 'bg-pink-50' : ''}
         `}
       >
-        {/* Decorative SVG Flowers */}
-        <div className="absolute -top-12 -right-12 w-32 h-32 rotate-12 opacity-80 pointer-events-none">
-          <svg viewBox="0 0 100 100" width="120" height="120">
-            <path d="M50,50 Q60,20 70,50 Q95,60 70,70 Q60,95 50,70 Q20,60 50,50" fill="#6b1317" opacity="0.1" />
-            <circle cx="50" cy="50" r="10" fill="#6b1317" opacity="0.2" />
-          </svg>
-        </div>
-        <div className="absolute -bottom-10 -left-10 w-24 h-24 -rotate-12 opacity-80 pointer-events-none">
-          <svg viewBox="0 0 100 100" width="100" height="100">
-            <path d="M50,50 Q60,20 70,50 Q95,60 70,70 Q60,95 50,70 Q20,60 50,50" fill="#6b1317" opacity="0.1" />
-          </svg>
-        </div>
-
         <div className="font-romantic text-[#6b1317] text-3xl sm:text-4xl leading-relaxed select-none">
-          <p className="mb-6">Dear {name},</p>
+          <p className="mb-4">Dear {name},</p>
           
           {isAccepted ? (
             <div className="text-center animate-fade-in py-8">
@@ -69,11 +53,20 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
             </div>
           ) : (
             <>
-              <p className="mb-6 text-xl sm:text-2xl font-sans font-light italic text-[#4a0d10]">
-                I know I can’t be there to ask you this in person right now, and a text message just didn't feel like enough. So I built this little space for us instead, to ask you one thing...
-              </p>
+              {poem ? (
+                <div className="mb-6 whitespace-pre-wrap text-2xl italic font-romantic text-[#4a0d10] border-l-4 border-[#6b1317]/20 pl-4 py-2">
+                  {poem}
+                </div>
+              ) : isLoadingPoem ? (
+                <div className="mb-6 h-24 flex items-center justify-center">
+                  <div className="w-8 h-8 border-4 border-[#6b1317] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <p className="mb-6 text-xl sm:text-2xl font-sans font-light italic text-[#4a0d10]">
+                  I know I can’t be there to ask you this in person right now, so I built this little space for us instead...
+                </p>
+              )}
               
-              {/* Proposal Section with selective blur */}
               <div 
                 onClick={handleRevealQuestion}
                 className={`transition-all duration-700 relative group ${!isQuestionVisible && !isBlurred ? 'cursor-pointer' : ''}`}
@@ -105,7 +98,7 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
                 {!isQuestionVisible && !isBlurred && (
                   <div className="absolute inset-0 flex items-center justify-center">
                      <span className="bg-[#6b1317] text-white text-xs font-sans px-4 py-2 rounded-full uppercase tracking-widest font-bold shadow-lg animate-pulse group-hover:scale-110 transition-transform">
-                       Click to reveal question
+                       Reveal the question
                      </span>
                   </div>
                 )}
