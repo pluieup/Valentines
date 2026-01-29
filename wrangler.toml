@@ -1,0 +1,7 @@
+
+#:schema node_modules/wrangler/config-schema.json
+name = "valentine-mailbox-surprise"
+pages_build_output_dir = "dist"
+
+[vars]
+# Environment variables can be defined here, or in the Cloudflare Dashboard
