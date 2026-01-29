@@ -15,7 +15,6 @@ const App: React.FC = () => {
   const [personalizedPoem, setPersonalizedPoem] = useState<string>('');
   const [isLoadingPoem, setIsLoadingPoem] = useState(false);
 
-  // Transition helper
   const nextState = useCallback(() => {
     switch (currentState) {
       case AppState.GREETING:
@@ -51,9 +50,13 @@ const App: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setPersonalizedPoem(data.poem);
+      } else {
+        throw new Error('Failed to fetch poem');
       }
     } catch (error) {
       console.error('Error fetching poem:', error);
+      // Fallback poem
+      setPersonalizedPoem(`To someone special, ${name} so dear,\nI'm so glad to have you near.\nA Valentine's wish I send to you,\nFilled with love, honest and true.`);
     } finally {
       setIsLoadingPoem(false);
     }
@@ -76,7 +79,7 @@ const App: React.FC = () => {
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
-    fetchPoem(name); // Kick off the AI poem generation in background
+    fetchPoem(name);
     nextState();
   };
 
@@ -87,10 +90,29 @@ const App: React.FC = () => {
        // @ts-ignore
       window.confetti({
         particleCount: 150,
-        spread: 70,
+        spread: 100,
         origin: { y: 0.6 },
-        colors: ['#6b1317', '#ff69b4', '#ffffff']
+        colors: ['#6b1317', '#ff69b4', '#ffffff', '#ffd700']
       });
+      // Second burst for more magic
+      setTimeout(() => {
+        // @ts-ignore
+        window.confetti({
+          particleCount: 100,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#6b1317', '#ff69b4']
+        });
+        // @ts-ignore
+        window.confetti({
+          particleCount: 100,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#6b1317', '#ff69b4']
+        });
+      }, 300);
     }
   };
 
@@ -107,7 +129,7 @@ const App: React.FC = () => {
   const isLetterActive = currentState === AppState.LETTER_REVEAL || currentState === AppState.PROPOSAL || currentState === AppState.ACCEPTED;
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden flex items-center justify-center font-sans bg-v-bg">
+    <div className="relative w-screen h-screen overflow-hidden flex items-center justify-center font-sans bg-v-bg selection:bg-v-red selection:text-white">
       <Background />
       <ScallopedFrame />
       
