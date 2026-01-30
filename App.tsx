@@ -12,8 +12,6 @@ const App: React.FC = () => {
   const [currentState, setCurrentState] = useState<AppState>(AppState.GREETING);
   const [userName, setUserName] = useState<string>('');
   const [isMailboxOpen, setIsMailboxOpen] = useState(false);
-  const [personalizedPoem, setPersonalizedPoem] = useState<string>('');
-  const [isLoadingPoem, setIsLoadingPoem] = useState(false);
 
   const nextState = useCallback(() => {
     switch (currentState) {
@@ -39,29 +37,6 @@ const App: React.FC = () => {
     }
   }, [currentState, isMailboxOpen]);
 
-  const fetchPoem = async (name: string) => {
-    setIsLoadingPoem(true);
-    try {
-      const response = await fetch('/api/ai/poem', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setPersonalizedPoem(data.poem);
-      } else {
-        throw new Error('Failed to fetch poem');
-      }
-    } catch (error) {
-      console.error('Error fetching poem:', error);
-      // Fallback poem
-      setPersonalizedPoem(`To someone special, ${name} so dear,\nI'm so glad to have you near.\nA Valentine's wish I send to you,\nFilled with love, honest and true.`);
-    } finally {
-      setIsLoadingPoem(false);
-    }
-  };
-
   const handleLetterClicked = () => {
     if (isMailboxOpen) {
       setCurrentState(AppState.LETTER_REVEAL);
@@ -79,7 +54,6 @@ const App: React.FC = () => {
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
-    fetchPoem(name);
     nextState();
   };
 
@@ -94,7 +68,6 @@ const App: React.FC = () => {
         origin: { y: 0.6 },
         colors: ['#6b1317', '#ff69b4', '#ffffff', '#ffd700']
       });
-      // Second burst for more magic
       setTimeout(() => {
         // @ts-ignore
         window.confetti({
@@ -119,7 +92,6 @@ const App: React.FC = () => {
   const handleRestart = () => {
     setUserName('');
     setIsMailboxOpen(false);
-    setPersonalizedPoem('');
     setCurrentState(AppState.GREETING);
   };
 
@@ -149,8 +121,6 @@ const App: React.FC = () => {
         {isLetterActive && (
           <LetterView 
             name={userName} 
-            poem={personalizedPoem}
-            isLoadingPoem={isLoadingPoem}
             isBlurred={currentState === AppState.LETTER_REVEAL}
             isAccepted={currentState === AppState.ACCEPTED}
             onRead={() => currentState === AppState.LETTER_REVEAL && nextState()}

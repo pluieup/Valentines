@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 interface Props {
   name: string;
-  poem?: string;
-  isLoadingPoem?: boolean;
   isBlurred: boolean;
   isAccepted: boolean;
   onRead: () => void;
@@ -11,14 +9,13 @@ interface Props {
   onRestart: () => void;
 }
 
-const LetterView: React.FC<Props> = ({ name, poem, isLoadingPoem, isBlurred, isAccepted, onRead, onAccept, onRestart }) => {
+const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAccept, onRestart }) => {
   const [noPos, setNoPos] = useState({ x: 0, y: 0 });
   const [isQuestionVisible, setIsQuestionVisible] = useState(false);
   const letterRef = useRef<HTMLDivElement>(null);
 
   const handleNoHover = () => {
     if (isAccepted || !letterRef.current || !isQuestionVisible) return;
-    // Increased range for more playfulness
     const range = 300;
     const newX = (Math.random() - 0.5) * range;
     const newY = (Math.random() - 0.5) * range;
@@ -44,7 +41,6 @@ const LetterView: React.FC<Props> = ({ name, poem, isLoadingPoem, isBlurred, isA
           ${isAccepted ? 'bg-pink-50 ring-4 ring-pink-200' : ''}
         `}
       >
-        {/* Decorative Sparkles for reveal */}
         {!isBlurred && !isAccepted && (
           <>
             <div className="absolute top-4 right-4 w-4 h-4 text-v-red/20 animate-sparkle">✦</div>
@@ -64,20 +60,9 @@ const LetterView: React.FC<Props> = ({ name, poem, isLoadingPoem, isBlurred, isA
             </div>
           ) : (
             <>
-              {poem ? (
-                <div className="mb-6 whitespace-pre-wrap text-2xl italic font-romantic text-[#4a0d10] border-l-4 border-[#6b1317]/20 pl-6 py-2 animate-fade-in">
-                  {poem}
-                </div>
-              ) : isLoadingPoem ? (
-                <div className="mb-6 h-32 flex flex-col items-center justify-center gap-3">
-                  <div className="w-8 h-8 border-4 border-[#6b1317] border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-xs font-sans uppercase tracking-widest text-v-red/50 animate-pulse">Writing your poem...</span>
-                </div>
-              ) : (
-                <p className="mb-6 text-xl sm:text-2xl font-sans font-light italic text-[#4a0d10]">
-                  I know I can’t be there to ask you this in person right now, so I built this little space for us instead...
-                </p>
-              )}
+              <p className="mb-6 text-xl sm:text-2xl font-sans font-light italic text-[#4a0d10]">
+                I know I can’t be there to ask you this in person right now, and a text message didn't feel like enough. So, I built this little space for us instead to ask you one question...
+              </p>
               
               <div 
                 onClick={handleRevealQuestion}
@@ -92,7 +77,7 @@ const LetterView: React.FC<Props> = ({ name, poem, isLoadingPoem, isBlurred, isA
                     <button 
                       onClick={onAccept}
                       disabled={!isQuestionVisible}
-                      className="px-12 py-3 bg-[#6b1317] text-white rounded-full font-bold text-lg hover:bg-[#8b1a1f] shadow-xl transform active:scale-95 transition-all z-10 hover:shadow-pink-900/20"
+                      className="px-12 py-3 bg-[#6b1317] text-white rounded-full font-bold text-lg hover:bg-[#8b1a1f] shadow-xl transform active:scale-95 transition-all z-10"
                     >
                       Yes!
                     </button>
@@ -128,10 +113,7 @@ const LetterView: React.FC<Props> = ({ name, poem, isLoadingPoem, isBlurred, isA
 
       {isAccepted && (
         <button 
-          onClick={() => {
-            setIsQuestionVisible(false);
-            onRestart();
-          }}
+          onClick={onRestart}
           className="mt-16 text-[#6b1317] underline font-semibold opacity-40 hover:opacity-100 transition-opacity text-sm uppercase tracking-widest"
         >
           Restart Surprise
