@@ -3,7 +3,7 @@ import React from 'react';
 
 const ScallopedFrame: React.FC = () => {
   return (
-    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
       {/* The main red frame */}
       <div className="absolute inset-0 border-[20px] sm:border-[30px] border-[#6b1317]" />
       
