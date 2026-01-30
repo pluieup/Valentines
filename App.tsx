@@ -105,7 +105,8 @@ const App: React.FC = () => {
       <Background />
       <ScallopedFrame />
       
-      <div className="z-10 w-full max-w-2xl px-8 flex flex-col items-center justify-center transition-all duration-1000">
+      {/* Global Scaling Wrapper: Added scale-90 and max-w-2xl mx-auto to zoom out and center */}
+      <div className="z-10 w-full max-w-2xl mx-auto px-8 flex flex-col items-center justify-center transition-all duration-1000 transform scale-90 origin-center">
         {currentState === AppState.GREETING && (
           <GreetingView onNext={nextState} />
         )}
@@ -130,12 +131,13 @@ const App: React.FC = () => {
         )}
       </div>
 
+      {/* Mailbox View: Adjusted bottom position from fixed edges to more comfortable anchoring */}
       <div className={`z-20 transition-all duration-1000 fixed ${
         isInOpeningStates 
-          ? 'bottom-16 right-16 scale-50 opacity-40 pointer-events-none' 
+          ? 'bottom-[10%] right-[10%] scale-50 opacity-40 pointer-events-none' 
           : isMailboxViewActive
-            ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-100 opacity-100 pointer-events-auto'
-            : 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 opacity-0 pointer-events-none'
+            ? 'top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 scale-90 opacity-100 pointer-events-auto'
+            : 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-110 opacity-0 pointer-events-none'
       }`}>
         <MailboxView 
           isOpen={isMailboxOpen} 
