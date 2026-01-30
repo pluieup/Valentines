@@ -48,7 +48,7 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
         ref={letterRef}
         onClick={isBlurred ? onRead : undefined}
         className={`
-          relative paper-texture w-full max-w-[90vw] md:max-w-[500px] max-h-[70vh] overflow-y-auto p-8 sm:p-12 rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-t-8 border-[#6b1317]
+          relative paper-texture w-full max-w-[90vw] md:max-w-[500px] min-h-[70vh] max-h-none overflow-visible p-8 sm:p-16 rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-t-8 border-[#6b1317]
           transition-all duration-[1000ms] ease-in-out transform
           ${isBlurred ? 'blur-[12px] cursor-pointer hover:scale-105' : 'blur-0'}
           ${isAccepted ? 'bg-pink-50 ring-4 ring-pink-200' : ''}
