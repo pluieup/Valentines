@@ -73,6 +73,7 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
             </div>
           ) : (
             <>
+              {/* Using font-sans for message and Yes button for cohesive clean look */}
               <p className="mb-6 text-xl sm:text-2xl font-sans font-normal text-[#4a0d10]">
                 I know I can’t be there to ask you this in person right now, and a text message didn't feel like enough. So, I built this little space for us instead to ask you one question...
               </p>
@@ -87,7 +88,7 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
                   </p>
 
                   <div className="relative mt-12 h-32 w-full">
-                    {/* Yes Button - Using same font as message */}
+                    {/* Yes Button - Using font-sans for consistency */}
                     <button 
                       onClick={onAccept}
                       disabled={!isQuestionVisible}
@@ -97,7 +98,7 @@ const LetterView: React.FC<Props> = ({ name, isBlurred, isAccepted, onRead, onAc
                       Yes!
                     </button>
 
-                    {/* Runaway No Button */}
+                    {/* Runaway No Button - Responsive and animated */}
                     <button 
                       onMouseOver={handleNoHover}
                       disabled={!isQuestionVisible}

@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { GoogleGenAI } from '@google/genai';
+import { Env } from '../src/worker';
 
-export const aiRouter = new Hono();
+export const aiRouter = new Hono<{ Bindings: Env }>();
 
 aiRouter.post('/poem', async (c) => {
   try {
@@ -12,8 +13,8 @@ aiRouter.post('/poem', async (c) => {
       return c.json({ error: 'Name is required' }, 400);
     }
 
-    // Direct usage of process.env.API_KEY as per the @google/genai SDK instructions
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+    // Initialize the Gemini AI client using the mandatory process.env.API_KEY as per the latest SDK guidelines
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Write a very short, romantic, 4-line poem for someone named ${name} for Valentine's Day. Make it sweet, poetic, and focused on the joy of meeting them.`,
@@ -23,7 +24,7 @@ aiRouter.post('/poem', async (c) => {
       }
     });
 
-    // Directly access the .text property from the response
+    // Directly access the .text property of the GenerateContentResponse object
     const poem = response.text || "Your presence is a gift, a dream come true,\nA world of color whenever I'm with you.\nIn every heartbeat, a song of sweet grace,\nMy favorite view is the smile on your face.";
 
     return c.json({ poem });
